@@ -3,19 +3,47 @@ package staunstrups.dk.barcode;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
+
 public class BarcodeActivity extends Activity {
+    private TextView url, content;
+
+    private class FetchTask extends AsyncTask<String, Void, String> {
+        private static final String pattern= "<tr><td>Description</td><td></td><td>";
+        @Override
+        protected String doInBackground(String... params) {
+            String result= null; int b=0; int e=0;
+            try {
+                result = new NetworkFetcher().getUrlString("https://www.upcdatabase.com/item/"+params[0]);
+                b= result.indexOf(pattern)+pattern.length();
+                e= result.indexOf("</", b);
+                Log.i("Barcode", result.subSequence(b, e).toString());
+            } catch (IOException ioe) {
+                Log.e("HttpUrl", "Failed to fetch URL:", ioe);
+            }
+            return result.subSequence(b, e).toString();
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            content.setText(result);
+        }
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_barcode);
+        content= (TextView) findViewById(R.id.content);
 
         try {
             Button scanner = (Button)findViewById(R.id.scanner);
@@ -50,8 +78,10 @@ public class BarcodeActivity extends Activity {
             if (resultCode == RESULT_OK) {
                 String contents = intent.getStringExtra("SCAN_RESULT");
                 String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
-// Handle successful scan
-                Toast toast = Toast.makeText(this, "Content:" + contents + " Format:" + format , Toast.LENGTH_LONG);
+                content.setText("       ");
+                new FetchTask().execute(contents);
+                // Handle successful scan
+                Toast toast = Toast.makeText(this, "Content:" + contents + " Format:" + format, Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.TOP, 25, 400);
                 toast.show();
             } else if (resultCode == RESULT_CANCELED) {
