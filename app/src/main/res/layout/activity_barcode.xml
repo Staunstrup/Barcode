@@ -7,18 +7,41 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center" android:textSize="25sp"/>
-    <Button android:text="Scan QR Code" android:id="@+id/scanner"
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:gravity="center" android:layout_gravity="center_horizontal">
-    </Button>
-    <Button android:text="Scan BAR Code" android:id="@+id/scanner2"
+    <Button android:text="Scan - Outpan" android:id="@+id/scan_outpan"
             android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:gravity="center" android:layout_gravity="center_horizontal">
     </Button>
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/content"
+        android:gravity="center" android:textSize="25sp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border"
+        android:id="@+id/contentOutpan"
         android:gravity="center" android:layout_gravity="center_horizontal"
+        android:text="Outpan: "
         android:textSize="20sp"/>
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center" android:textSize="25sp"/>
+    <Button android:text="Scan UPC" android:id="@+id/scanner_upc"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:gravity="center" android:layout_gravity="center_horizontal">
+    </Button>
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center" android:textSize="25sp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border"
+        android:id="@+id/contentUPC"
+        android:gravity="center" android:layout_gravity="center_horizontal"
+        android:text="UPC: "
+        android:textSize="20sp"/>
+
 </LinearLayout>
