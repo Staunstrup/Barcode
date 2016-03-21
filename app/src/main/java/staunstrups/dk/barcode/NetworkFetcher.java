@@ -3,6 +3,9 @@ package staunstrups.dk.barcode;
 import android.net.Uri;
 import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,18 +45,29 @@ public class NetworkFetcher {
     public String getUrlString(String urlSpec) throws IOException {
         return new String(getUrlBytes(urlSpec));
     }
-    public void fetchItems(String param) {
+    public scannedItem fetchItems(String param) {
         try {
-            String url= Uri.parse("https://api.outpan.com/v2/products/"+param)
+            String url = Uri.parse("https://api.outpan.com/v2/products/" + param)
                     .buildUpon()
                     .appendQueryParameter("apikey", APIKey)
                     .build().toString();
-            String jsonString= getUrlString(url);
-            Log.i(TAG, "Received JSON: "+jsonString);
+            String jsonString = getUrlString(url);
+            Log.i(TAG, "Received JSON: " + jsonString);
+            JSONObject jsonBody = new JSONObject(jsonString);
+            return parseItems(jsonBody);
 
+        } catch (JSONException je) {
+            Log.e(TAG, "Failed to parse JSON", je);
+            return null;
         } catch (IOException ioe) {
             Log.e(TAG, "Failed to fetch items", ioe);
+            return null;
         }
     }
-
+    private scannedItem parseItems(JSONObject jsonBody) throws IOException, JSONException {
+        scannedItem sI= new scannedItem();
+        sI.setBarcode(jsonBody.getString("gtin"));
+        sI.setName(jsonBody.getString("name"));
+        return sI;
+    }
 }

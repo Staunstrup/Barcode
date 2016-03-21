@@ -21,8 +21,8 @@ public class BarcodeActivity extends Activity {
 
         @Override
         protected String doInBackground(String... params) {
-            new NetworkFetcher().fetchItems(params[0]);
-            return "Itemname";
+            scannedItem sI= new NetworkFetcher().fetchItems(params[0]);
+            return sI.getName();
         }
         @Override
         protected void onPostExecute(String result) {   outpan.setText(result);   }
