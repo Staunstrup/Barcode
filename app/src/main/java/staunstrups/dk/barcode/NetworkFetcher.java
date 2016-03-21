@@ -1,5 +1,8 @@
 package staunstrups.dk.barcode;
 
+import android.net.Uri;
+import android.util.Log;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,6 +14,8 @@ import java.net.URL;
  */
 public class NetworkFetcher {
     private static final String TAG = "FileFetchr";
+    private static final String APIKey="0d093355b598c1c60d855989a0818a31";
+
 
     public byte[] getUrlBytes(String urlSpec) throws IOException {
         URL url = new URL(urlSpec);
@@ -36,6 +41,19 @@ public class NetworkFetcher {
     }
     public String getUrlString(String urlSpec) throws IOException {
         return new String(getUrlBytes(urlSpec));
+    }
+    public void fetchItems(String param) {
+        try {
+            String url= Uri.parse("https://api.outpan.com/v2/products/"+param)
+                    .buildUpon()
+                    .appendQueryParameter("apikey", APIKey)
+                    .build().toString();
+            String jsonString= getUrlString(url);
+            Log.i(TAG, "Received JSON: "+jsonString);
+
+        } catch (IOException ioe) {
+            Log.e(TAG, "Failed to fetch items", ioe);
+        }
     }
 
 }
