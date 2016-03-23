@@ -3,6 +3,7 @@ package staunstrups.dk.barcode;
 import android.net.Uri;
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -16,8 +17,8 @@ import java.net.URL;
  * Created by jst on 3/18/16.
  */
 public class NetworkFetcher {
-    private static final String TAG = "FileFetchr";
-    private static final String APIKey="0d093355b598c1c60d855989a0818a31";
+    private static final String TAG = "NetworkFetchr";
+
 
 
     public byte[] getUrlBytes(String urlSpec) throws IOException {
@@ -45,12 +46,13 @@ public class NetworkFetcher {
     public String getUrlString(String urlSpec) throws IOException {
         return new String(getUrlBytes(urlSpec));
     }
-    public scannedItem fetchItems(String param) {
+    public String fetchItems(String param) {
         try {
-            String url = Uri.parse("https://api.outpan.com/v2/products/" + param)
+            String url = Uri.parse(param)
                     .buildUpon()
-                    .appendQueryParameter("apikey", APIKey)
+                    //.appendQueryParameter("apikey", APIKey)
                     .build().toString();
+            Log.i(TAG, url);
             String jsonString = getUrlString(url);
             Log.i(TAG, "Received JSON: " + jsonString);
             JSONObject jsonBody = new JSONObject(jsonString);
@@ -64,10 +66,11 @@ public class NetworkFetcher {
             return null;
         }
     }
-    private scannedItem parseItems(JSONObject jsonBody) throws IOException, JSONException {
-        scannedItem sI= new scannedItem();
-        sI.setBarcode(jsonBody.getString("gtin"));
-        sI.setName(jsonBody.getString("name"));
-        return sI;
+    private String parseItems(JSONObject jsonBody) throws IOException, JSONException {
+        JSONArray featureArray= jsonBody.getJSONArray("features");
+        if (featureArray.length()>0) {
+            JSONObject geometry= featureArray.getJSONObject(0).getJSONObject("properties");
+            return geometry.getString("vejnavn");
+        } else  return "Arraylenth 0";
     }
 }
