@@ -3,27 +3,6 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" android:orientation="vertical"
     android:layout_gravity="center">
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center" android:textSize="25sp"/>
 
-    <Button android:text="GET"
-        android:id="@+id/get"
-        android:textSize="30sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_gravity="center_horizontal">
-    </Button>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/border"
-        android:id="@+id/content"
-        android:gravity="center" android:layout_gravity="center_horizontal"
-        android:text="JSON: "
-        android:textSize="20sp"/>
 
 </LinearLayout>

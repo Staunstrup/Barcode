@@ -1,4 +1,4 @@
-package staunstrups.dk.barcode;
+package staunstrups.dk.jsonexample;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
