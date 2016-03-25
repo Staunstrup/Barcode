@@ -75,7 +75,10 @@ public class NetworkFetcher {
                 JSONArray coOrd= featureArray.getJSONObject(i)
                         .getJSONObject("geometry")
                         .getJSONArray("coordinates");
-                tempArr[i]= new Position(coOrd.getDouble(0), coOrd.getDouble(1));
+                String roadName= featureArray.getJSONObject(i)
+                        .getJSONObject("properties")
+                        .getString("vejnavn");
+                tempArr[i]= new Position(coOrd.getDouble(1), coOrd.getDouble(0), roadName);
                 Log.i(TAG, tempArr[i].toString());
             }
             return tempArr;
