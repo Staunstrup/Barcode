@@ -1,4 +1,4 @@
-package staunstrups.dk.barcode;
+package staunstrups.dk.bicyclestands;
 
 import org.junit.Test;
 

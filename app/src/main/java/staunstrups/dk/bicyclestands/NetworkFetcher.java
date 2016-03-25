@@ -1,4 +1,4 @@
-package staunstrups.dk.barcode;
+package staunstrups.dk.bicyclestands;
 
 import android.net.Uri;
 import android.util.Log;
@@ -18,8 +18,6 @@ import java.net.URL;
  */
 public class NetworkFetcher {
     private static final String TAG = "NetworkFetchr";
-
-
 
     public byte[] getUrlBytes(String urlSpec) throws IOException {
         URL url = new URL(urlSpec);
@@ -46,7 +44,9 @@ public class NetworkFetcher {
     public String getUrlString(String urlSpec) throws IOException {
         return new String(getUrlBytes(urlSpec));
     }
-    public String fetchItems(String param) {
+    public Position[] fetchItems(String param) {
+
+        //warning may return null
         try {
             String url = Uri.parse(param)
                     .buildUpon()
@@ -54,7 +54,7 @@ public class NetworkFetcher {
                     .build().toString();
             Log.i(TAG, url);
             String jsonString = getUrlString(url);
-            Log.i(TAG, "Received JSON: " + jsonString);
+            Log.i(TAG, "Received JSON");
             JSONObject jsonBody = new JSONObject(jsonString);
             return parseItems(jsonBody);
 
@@ -66,11 +66,19 @@ public class NetworkFetcher {
             return null;
         }
     }
-    private String parseItems(JSONObject jsonBody) throws IOException, JSONException {
+
+    private Position[] parseItems(JSONObject jsonBody) throws IOException, JSONException {
         JSONArray featureArray= jsonBody.getJSONArray("features");
         if (featureArray.length()>0) {
-            JSONObject geometry= featureArray.getJSONObject(0).getJSONObject("properties");
-            return geometry.getString("vejnavn");
-        } else  return "Arraylenth 0";
+            Position[] tempArr= new Position[featureArray.length()];
+            for (int i=0; (i< featureArray.length()); i++)  {
+                JSONArray coOrd= featureArray.getJSONObject(i)
+                        .getJSONObject("geometry")
+                        .getJSONArray("coordinates");
+                tempArr[i]= new Position(coOrd.getDouble(0), coOrd.getDouble(1));
+                Log.i(TAG, tempArr[i].toString());
+            }
+            return tempArr;
+        } else return null;
     }
 }
